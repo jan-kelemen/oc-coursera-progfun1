@@ -2,7 +2,6 @@ package funsets
 
 import org.scalatest.FunSuite
 
-
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
@@ -46,7 +45,6 @@ class FunSetSuite extends FunSuite {
   // test("adding ints") {
   //   assert(1 + 2 === 3)
   // }
-
 
   import FunSets._
 
@@ -110,5 +108,75 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("intersect") {
+    new TestSets {
+      val s = union(union(s1, s2), s3)
+      assert(contains(s, 1))
+      assert(contains(s, 2))
+      assert(contains(s, 3))
+
+      val si = intersect(s, s2)
+      assert(!contains(si, 1))
+      assert(contains(si, 2))
+      assert(!contains(si, 3))
+    }
+  }
+
+  test("diff") {
+    new TestSets {
+      val s = union(union(s1, s2), s3)
+      val d = diff(s, s3)
+
+      assert(contains(d, 1))
+      assert(contains(d, 2))
+      assert(!contains(d, 3))
+    }
+  }
+
+  test("filter") {
+    new TestSets {
+      val s = union(union(s1, s2), s3)
+      val f = filter(s, x => x > 1)
+
+      assert(!contains(f, 1))
+      assert(contains(f, 2))
+      assert(contains(f, 3))
+    }
+  }
+
+  test("forall") {
+    new TestSets {
+      val s = union(s1, s2);
+
+      assert(forall(s, x => x > 0))
+      assert(forall(s, x => x < 3))
+    }
+  }
+
+  test("exists") {
+    new TestSets {
+      val s = union(s1, s2);
+
+      assert(exists(s, x => x == 1))
+      assert(exists(s, x => x == 2))
+      assert(!exists(s, x => x == 3))
+
+      assert(!exists(s, x => x < 1))
+      assert(exists(s, x => x < 2))
+    }
+  }
+
+  test("map") {
+    new TestSets {
+      val s = union(union(s1, s2), s3)
+
+      val sq = map(s, x => x * x);
+
+      assert(!contains(sq, 0))
+      assert(contains(sq, 1))
+      assert(contains(sq, 4))
+      assert(contains(sq, 9))
+    }
+  }
 
 }
